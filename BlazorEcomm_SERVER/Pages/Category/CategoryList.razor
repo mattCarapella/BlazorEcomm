@@ -1,0 +1,101 @@
+﻿@page "/categories"
+@inject ICategoryRepository _categoryRepository
+@inject IJSRuntime _jsRuntime
+
+<_DeleteConfirmation ConfirmationChanged="ConfirmDelete" IsParentComponentProcessing="IsLoading"></_DeleteConfirmation>
+
+<div class="row mt-4">
+    <div class="col-6">
+        <h4 class="card-title text-info">Categories</h4>
+    </div>
+    <div class="col-4 offset-2">
+        <a href="categories/create" class="btn btn-info form-control">Add a category</a>
+    </div>
+    <div class="col-12">
+        @if (Categories.Any())
+        {
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var category in Categories)
+                    {
+                        <tr>
+                            <td>
+                                @category.Name
+                            </td>
+                            <td>
+                                <NavLink href="@($"/categories/edit/{category.Id}")" class="btn btn-primary">Edit</NavLink>
+                                <button class="btn btn-danger" @onclick="() => HandleDelete(category.Id)">Delete</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            @if (IsLoading)
+            {
+                // Display load wheel
+                <div class="text-center">
+                    <img src="/images/loading.gif" />
+                </div>
+            }
+        }
+    </div>
+</div>
+
+
+@code {
+    private IEnumerable<CategoryDTO> Categories { get; set; } = new List<CategoryDTO>();
+    //public bool IsLoading { get; set; } = true;
+    public bool IsLoading { get; set; }
+    private int DeleteCategoryId { get; set; } = 0;
+
+
+    /* This is being removed because Task.Run is not ideal for applications as it created a seperate thread to work on. OnInitializedAsync is being changed to OnAfterRenderAsync */
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    await Task.Run(LoadCategories);
+    //}
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender) await LoadCategories();
+    }
+
+    private async Task LoadCategories()
+    {
+        IsLoading = true;
+        // notifies the component that the state has changed and it should render
+        StateHasChanged();
+        Categories = await _categoryRepository.GetAll();
+        IsLoading = false;
+        StateHasChanged();
+    }
+
+    private void HandleDelete(int id)
+    {
+        DeleteCategoryId = id;
+        _jsRuntime.InvokeVoidAsync("ShowDeleteConfirmationModal");
+    }
+
+    /* ConfirmDelete is called by _DeleteConfirmation child component. Passed as EventCallback<bool> ConfirmationChanged */
+    private async Task ConfirmDelete(bool isConfirmed)
+    {
+        IsLoading = true;
+        if (isConfirmed && DeleteCategoryId != 0)
+        {
+            await _categoryRepository.Delete(DeleteCategoryId);
+            await LoadCategories();
+            await _jsRuntime.InvokeVoidAsync("HideDeleteConfirmationModal");
+        }
+        IsLoading = false;
+    }
+}

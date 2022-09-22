@@ -1,0 +1,182 @@
+﻿@page "/products/price/{Id:int}"
+@inject IProductRepository _productRepository
+@inject IProductPriceRepository _productPriceRepository
+
+<h3 class="card-title text-primary mb-4 ml-4">Product Price Management</h3>
+@if (IsLoading)
+{
+    <div class="text-center">
+        <img src="/images/loading.gif" />
+    </div>
+}
+else
+{
+    <div class="row border p-2 mb-4">
+        <div class="col-11">
+            <div class="card-body">
+                <h4>@Product.Brand @Product.Name</h4>
+                <hr/>
+                <span>
+                    <strong>Category:</strong> @Product.Category.Name
+                </span>
+                <hr/>
+                <div class="mb-3"><strong>Description:</strong></div>
+                <div>@((MarkupString)Product.Description)</div> 
+                <br/>
+            </div>
+        </div>
+        <div class="col-1">
+            <img src="@Product.ImageUrl" class="w-100" />
+        </div>
+    </div>
+    <SfGrid 
+        @ref="ProductPriceGrid" DataSource="@ProductPrices" AllowPaging="true" AllowFiltering="true" AllowSorting="true" 
+        Toolbar="@(new List<string>{"Add", "Edit", "Update", "Delete", "Cancel"})" >
+        <GridEditSettings AllowAdding="true" AllowEditing="true" ShowDeleteConfirmDialog="true" AllowDeleting="true" NewRowPosition="NewRowPosition.Bottom">
+        </GridEditSettings>
+        <GridEvents OnActionBegin="ActionHandler" TValue="ProductPriceDTO"></GridEvents>
+        <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
+        <GridSortSettings AllowUnsort="false">
+            <GridSortColumns>
+                <GridSortColumn Field="Price" Direction="SortDirection.Ascending"></GridSortColumn>
+            </GridSortColumns>
+        </GridSortSettings>
+        <GridPageSettings PageSize="5" PageCount="5" PageSizes="true"></GridPageSettings>
+        <GridColumns>
+            <GridColumn Field=@nameof(ProductPriceDTO.Id) IsPrimaryKey="true" AllowAdding="false" HeaderText="ID" TextAlign="TextAlign.Left" Width="50"></GridColumn>
+            @*<GridColumn Field=@nameof(ProductPriceDTO.Size) HeaderText="Size" Width="100">
+                <EditTemplate>
+                    <SfDropDownList DataSource="SizeList" TItem="string" TValue="string" @bind-Value="((context as ProductPriceDTO).Size)">
+                    </SfDropDownList>
+                </EditTemplate>
+            </GridColumn>*@
+            <GridColumn Field=@nameof(ProductPriceDTO.ScreenSize) HeaderText="Screen Size" Width="100">
+                <EditTemplate>
+                    <SfDropDownList DataSource="ScreenSizeList" TItem="string" TValue="string" @bind-Value="((context as ProductPriceDTO).ScreenSize)">
+                    </SfDropDownList>
+                </EditTemplate>
+            </GridColumn>
+            <GridColumn Field=@nameof(ProductPriceDTO.Memory) HeaderText="Memory" Width="100">
+                <EditTemplate>
+                    <SfDropDownList DataSource="MemoryList" TItem="string" TValue="string" @bind-Value="((context as ProductPriceDTO).Memory)">
+                    </SfDropDownList>
+                </EditTemplate>
+            </GridColumn>
+            <GridColumn Field=@nameof(ProductPriceDTO.Storage) HeaderText="Storage" Width="100">
+                <EditTemplate>
+                    <SfDropDownList DataSource="StorageList" TItem="string" TValue="string" @bind-Value="((context as ProductPriceDTO).Storage)">
+                    </SfDropDownList>
+                </EditTemplate>
+            </GridColumn>
+            <GridColumn Field=@nameof(ProductPriceDTO.Price) HeaderText="Price" Format="C2" Width="150"></GridColumn>
+            <GridColumn HeaderText="Manage Records" Width="150">
+                <GridCommandColumns>
+                    <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-edit", CssClass = "e-flat" })"></GridCommandColumn>
+                    <GridCommandColumn Type="CommandButtonType.Delete" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-delete", CssClass = "e-flat" })"></GridCommandColumn>
+                    <GridCommandColumn Type="CommandButtonType.Save" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-update", CssClass = "e-flat" })"></GridCommandColumn>
+                    <GridCommandColumn Type="CommandButtonType.Cancel" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-cancel-icon", CssClass = "e-flat" })"></GridCommandColumn>
+                </GridCommandColumns>
+            </GridColumn>
+        </GridColumns>
+    </SfGrid>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    private ProductDTO Product { get; set; } = new();
+    private IEnumerable<ProductPriceDTO> ProductPrices { get; set; } = new List<ProductPriceDTO>();
+    private bool IsLoading { get; set; } = true;
+    public SfGrid<ProductPriceDTO> ProductPriceGrid;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // Render product based on ID, only on page's first render
+        if (firstRender)
+        {
+            IsLoading = true;
+            StateHasChanged();
+            Product = await _productRepository.Get(Id);
+            ProductPrices = await _productPriceRepository.GetAll(Id);
+            IsLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    // Used for DataGrid toolbar dropdown
+
+    IEnumerable<string> SizeList = new List<string>
+    {
+        "X-Small", "Small", "Medium", "Large", "X-Large"
+    };
+
+    IEnumerable<string> ScreenSizeList = new List<string>
+    {
+        "10", "11", "12", "13", "14", "15", "16", "17"
+    };
+
+    IEnumerable<string> MemoryList = new List<string>
+    {
+        "4GB", "8GB", "16GB", "32GB", "64GB", "128GB"
+    };
+
+    IEnumerable<string> StorageList = new List<string>
+    {
+        "128GB", "256GB", "215GB", "1TB", "1.5TB", "2TB", "4TB", "8TB", "16TB", "32TB"
+    };
+
+
+
+
+    public async void ActionHandler(ActionEventArgs<ProductPriceDTO> args)
+    {
+        if (args.RequestType.Equals(Syncfusion.Blazor.Grids.Action.Save))
+        {
+            // Create or Edit product price
+            args.Data.ProductId = Id;
+
+            if (args.Action == "Add")
+            {
+                await _productPriceRepository.Create(args.Data);
+                ProductPrices = await _productPriceRepository.GetAll(Id);
+                ProductPriceGrid.Refresh();
+            }
+            if (args.Action == "Edit")
+            {
+                await _productPriceRepository.Update(args.Data);
+            }
+
+        }
+        if (args.RequestType.Equals(Syncfusion.Blazor.Grids.Action.Delete))
+        {
+            await _productPriceRepository.Delete(args.Data.Id);
+            ProductPriceGrid.Refresh();
+        }
+    }
+}
+
+
+
+
+
+
+
+@code {
+
+    //Console.WriteLine("************************************************");
+    //Console.WriteLine("!!!!!!!!!        ACTION HANDLER        !!!!!!!!!");
+    //Console.WriteLine("************************************************");
+    //Console.WriteLine("ARGS: " + args.Action + "  |  REQTYPE: " + args.RequestType);
+
+    //Console.WriteLine("************************************************");
+    //Console.WriteLine("!!!!!!!!!             ADD              !!!!!!!!!");
+    //Console.WriteLine("************************************************");
+
+    //Console.WriteLine("************************************************");
+    //Console.WriteLine("!!!!!!!!!             EDIT             !!!!!!!!!");
+    //Console.WriteLine("************************************************");
+
+    //Console.WriteLine("************************************************");
+    //Console.WriteLine("!!!!!!             DIDNT WORK             !!!!!!");
+    //Console.WriteLine("************************************************");
+}
