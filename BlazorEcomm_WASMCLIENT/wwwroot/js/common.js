@@ -6,6 +6,7 @@ function HideDeleteConfirmationModal() {
     $('#deleteConfirmationModal').modal('hide');
 }
 
+
 window.ShowToastr = (type, message) => {
     if (type === "success") {
         toastr.success(message, 'Operation Successful', { timeOut: 5000 });
