@@ -29,7 +29,7 @@ public class FileUpload : IFileUpload
         var filePath = Path.Combine(folderDirectory, fileName);
 
         // FileStream should always be used with Blazor
-        await using FileStream fs = new FileStream(filePath, FileMode.Create);
+        await using FileStream fs = new(filePath, FileMode.Create);
         await file.OpenReadStream().CopyToAsync(fs);
 
         // returns location where file was saved

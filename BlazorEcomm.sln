@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorEcomm_DATA", "BlazorE
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorEcomm_API", "BlazorEcomm_API\BlazorEcomm_API.csproj", "{4A58CD69-AB0C-4DA4-957D-8D33B8FDAF13}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorEcomm_WASMCLIENT", "BlazorEcomm_WASMCLIENT\BlazorEcomm_WASMCLIENT.csproj", "{5A425E75-2B9B-4F01-85A5-FC4645C886AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorEcomm_WASMCLIENT", "BlazorEcomm_WASMCLIENT\BlazorEcomm_WASMCLIENT.csproj", "{5A425E75-2B9B-4F01-85A5-FC4645C886AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

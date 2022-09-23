@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BlazorEcomm_API.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/[controller]s")]
 [ApiController]
 public class ProductController : ControllerBase
 {
@@ -35,7 +35,7 @@ public class ProductController : ControllerBase
         }
         
         var product = await _productRepository.Get(id.Value);
-        if (product is null)
+        if (product == null)
         {
             return BadRequest(new ErrorModelDTO()
             {

@@ -12,6 +12,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString")));
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
+builder.Services.AddCors(o => o.AddPolicy("BlazorEcomm", builder =>
+{
+    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+}));
+
 // Requires AutoMapper.Extensions.Microsoft.DependencyInjection package to be installed
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -25,6 +30,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// AddCors service is registered above
+app.UseCors("BlazorEcomm");
+
 app.UseRouting();
 app.UseAuthorization();
 app.MapControllers();

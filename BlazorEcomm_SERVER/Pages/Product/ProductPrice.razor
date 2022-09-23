@@ -29,7 +29,45 @@ else
             <img src="@Product.ImageUrl" class="w-100" />
         </div>
     </div>
-    <SfGrid 
+    
+    @if (Product.Category.Name == "Candles" || Product.Category.Name == "Soap")
+    {
+        <SfGrid 
+            @ref="ProductPriceGrid" DataSource="@ProductPrices" AllowPaging="true" AllowFiltering="true" AllowSorting="true" 
+            Toolbar="@(new List<string>{"Add", "Edit", "Update", "Delete", "Cancel"})" >
+            <GridEditSettings AllowAdding="true" AllowEditing="true" ShowDeleteConfirmDialog="true" AllowDeleting="true" NewRowPosition="NewRowPosition.Bottom">
+            </GridEditSettings>
+            <GridEvents OnActionBegin="ActionHandler" TValue="ProductPriceDTO"></GridEvents>
+            <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
+            <GridSortSettings AllowUnsort="false">
+                <GridSortColumns>
+                    <GridSortColumn Field="Price" Direction="SortDirection.Ascending"></GridSortColumn>
+                </GridSortColumns>
+            </GridSortSettings>
+            <GridPageSettings PageSize="5" PageCount="5" PageSizes="true"></GridPageSettings>
+            <GridColumns>
+                <GridColumn Field=@nameof(ProductPriceDTO.Id) IsPrimaryKey="true" AllowAdding="false" HeaderText="ID" TextAlign="TextAlign.Left" Width="50"></GridColumn>
+                <GridColumn Field=@nameof(ProductPriceDTO.Size) HeaderText="Size" Width="100">
+                    <EditTemplate>
+                        <SfDropDownList DataSource="SizeList" TItem="string" TValue="string" @bind-Value="((context as ProductPriceDTO).Size)">
+                        </SfDropDownList>
+                    </EditTemplate>
+                </GridColumn>
+                <GridColumn Field=@nameof(ProductPriceDTO.Price) HeaderText="Price" Format="C2" Width="150"></GridColumn>
+                <GridColumn HeaderText="Manage Records" Width="150">
+                    <GridCommandColumns>
+                        <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-edit", CssClass = "e-flat" })"></GridCommandColumn>
+                        <GridCommandColumn Type="CommandButtonType.Delete" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-delete", CssClass = "e-flat" })"></GridCommandColumn>
+                        <GridCommandColumn Type="CommandButtonType.Save" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-update", CssClass = "e-flat" })"></GridCommandColumn>
+                        <GridCommandColumn Type="CommandButtonType.Cancel" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-cancel-icon", CssClass = "e-flat" })"></GridCommandColumn>
+                    </GridCommandColumns>
+                </GridColumn>
+            </GridColumns>
+        </SfGrid>
+    }
+    else if (Product.Category.Name == "Laptops" || Product.Category.Name == "Phones")
+    {
+        <SfGrid 
         @ref="ProductPriceGrid" DataSource="@ProductPrices" AllowPaging="true" AllowFiltering="true" AllowSorting="true" 
         Toolbar="@(new List<string>{"Add", "Edit", "Update", "Delete", "Cancel"})" >
         <GridEditSettings AllowAdding="true" AllowEditing="true" ShowDeleteConfirmDialog="true" AllowDeleting="true" NewRowPosition="NewRowPosition.Bottom">
@@ -44,12 +82,6 @@ else
         <GridPageSettings PageSize="5" PageCount="5" PageSizes="true"></GridPageSettings>
         <GridColumns>
             <GridColumn Field=@nameof(ProductPriceDTO.Id) IsPrimaryKey="true" AllowAdding="false" HeaderText="ID" TextAlign="TextAlign.Left" Width="50"></GridColumn>
-            @*<GridColumn Field=@nameof(ProductPriceDTO.Size) HeaderText="Size" Width="100">
-                <EditTemplate>
-                    <SfDropDownList DataSource="SizeList" TItem="string" TValue="string" @bind-Value="((context as ProductPriceDTO).Size)">
-                    </SfDropDownList>
-                </EditTemplate>
-            </GridColumn>*@
             <GridColumn Field=@nameof(ProductPriceDTO.ScreenSize) HeaderText="Screen Size" Width="100">
                 <EditTemplate>
                     <SfDropDownList DataSource="ScreenSizeList" TItem="string" TValue="string" @bind-Value="((context as ProductPriceDTO).ScreenSize)">
@@ -79,6 +111,8 @@ else
             </GridColumn>
         </GridColumns>
     </SfGrid>
+    }
+    
 }
 
 @code {

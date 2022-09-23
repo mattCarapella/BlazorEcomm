@@ -1,8 +1,8 @@
 ﻿@page "/js";
-@using BlazorEcomm_SERVER.Helpers;
-@inject IJSRuntime _JsRuntime;
+@*@using BlazorEcomm_SERVER.Helpers;
+@inject IJSRuntime _JsRuntime;*@
 
-<div class="row">
+@*<div class="row">
     <button class="btn btn-primary" @onclick="TestConfirmBox">Test Confirm</button>
 </div>
 <div class="row my-4">
@@ -18,7 +18,9 @@
 {
     <h1>Button Clicked!</h1>
 }
+*@
 
+@*
 @code {
     private string ConfirmMessage = "Are you sure you want to click?";
     private bool ConfirmResult { get; set; }
@@ -52,4 +54,4 @@
     {
         await _JsRuntime.InvokeVoidAsync("ShowSwal", "error", "Error!");
     }
-}
+}*@

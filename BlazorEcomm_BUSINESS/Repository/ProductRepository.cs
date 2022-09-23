@@ -37,13 +37,16 @@ public class ProductRepository : IProductRepository
         return new ProductDTO();
     }
 
+
     public async Task<IEnumerable<ProductDTO>> GetAll()
     {
         var obj = await _db.Products.Include(p => p.Category)
                                     .Include(p => p.ProductPrices)
                                     .ToListAsync();
+
         return _mapper.Map<IEnumerable<Product>, IEnumerable<ProductDTO>>(obj);
     }
+
 
     public async Task<ProductDTO> Update(ProductDTO objDTO)
     {
