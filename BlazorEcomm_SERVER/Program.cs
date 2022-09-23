@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using BlazorEcomm_SERVER.Data;
 using BlazorEcomm_DATA.Data;
 using BlazorEcomm_BUSINESS.Repository;
 using BlazorEcomm_BUSINESS.Repository.IRepository;
@@ -11,17 +10,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(builder.Configuration.GetConnectionString("SyncfusionLicenseKey"));
 
-// Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSyncfusionBlazor();
-
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString")));
-
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductPriceRepository, ProductPriceRepository>();
-
 builder.Services.AddScoped<IFileUpload, FileUpload>();
 
 // Requires AutoMapper.Extensions.Microsoft.DependencyInjection package to be installed

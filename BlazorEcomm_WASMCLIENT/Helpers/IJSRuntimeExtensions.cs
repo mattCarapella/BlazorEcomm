@@ -1,6 +1,6 @@
 ﻿using Microsoft.JSInterop;
 
-namespace BlazorEcomm_SERVER.Helpers;
+namespace BlazorEcomm_WASMCLIENT.Helpers;
 
 public static class IJSRuntimeExtensions
 {

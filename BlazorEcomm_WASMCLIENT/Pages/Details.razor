@@ -1,5 +1,8 @@
 ﻿@page "/details/{ProductId:int}"
+@inject NavigationManager _navigationManager
 @inject IProductService _productService
+@inject ICartService _cartService
+@inject IJSRuntime _jsRuntime
 
 @if (IsProcessing)
 {
@@ -124,6 +127,18 @@ else
 
     private async Task AddToCart()
     {
-        
+        /* Create ShoppingCart object when user clicks 'Add to Cart' button. */
+        ShoppingCart shoppingCart = new()
+        {
+            Count = DetailsVM.Count,
+            ProductId = ProductId,      // from parameter
+            ProductPriceId = DetailsVM.SelectedProductPriceId
+        };
+
+        /* Use CartService to increment count. Service checks if cart already exists and 
+         * increments if it does or creates a new cart if it doesn't. */
+        await _cartService.IncrementCart(shoppingCart);
+        _navigationManager.NavigateTo("/");
+        await _jsRuntime.ToastrSuccess("The product has been successfully added to your cart.");
     }
 }
