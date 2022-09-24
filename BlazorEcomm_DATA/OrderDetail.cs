@@ -12,7 +12,7 @@ public class OrderDetail
     public int OrderHeaderId { get; set; }
     
     [Required] 
-    int ProductId { get; set; }
+    public int ProductId { get; set; }
     
     [ForeignKey("ProductId"), NotMapped] 
     public virtual Product? Product { get; set; }

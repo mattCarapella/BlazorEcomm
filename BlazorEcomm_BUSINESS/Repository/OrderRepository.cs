@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BlazorEcomm_BUSINESS.Repository.IRepository;
+using BlazorEcomm_COMMON;
 using BlazorEcomm_DATA;
 using BlazorEcomm_DATA.Data;
 using BlazorEcomm_DATA.ViewModel;
@@ -18,16 +19,46 @@ public class OrderRepository : IOrderRepository
         _mapper = mapper;
     }
 
-    //public async Task<OrderDTO> Get(int id)
-    //{
+    public async Task<OrderDTO> Get(int id)
+    {
+        /* An order is comprised of order header and order details. */
+        Order order = new()
+        {
+            // NOTE: changed these to async ***
+            OrderHeader = await _db.OrderHeaders.FirstOrDefaultAsync(oh => oh.Id == id),
+            OrderDetails = await _db.OrderDetails.Where(od => od.Id == id).ToListAsync(),
+        };
 
-    //}
+        if (order is not null)
+        {
+            return _mapper.Map<Order, OrderDTO>(order);
+        }
+        return new OrderDTO();
+    }
 
-    //public async Task<IEnumerable<OrderDTO>> GetAll(string? userId = null, string? status = null)
-    //{
 
-    //}
-    
+    public async Task<IEnumerable<OrderDTO>> GetAll(string? userId = null, string? status = null)
+    {
+        List<Order> ordersFromDb = new();
+        IEnumerable<OrderHeader> orderHeaderList = _db.OrderHeaders;
+        IEnumerable<OrderDetail> orderDetailsList = _db.OrderDetails;
+
+        foreach (OrderHeader header in orderHeaderList)
+        {
+            Order order = new()
+            {
+                OrderHeader = header,
+                OrderDetails = orderDetailsList.Where(od => od.OrderHeaderId == header.Id)
+            };
+            ordersFromDb.Add(order);
+        }
+
+        // #TODO: list filtering
+
+        return _mapper.Map<IEnumerable<Order>, IEnumerable<OrderDTO>>(ordersFromDb);
+    }
+
+
     public async Task<OrderDTO> Create(OrderDTO objDTO)
     {
         try
@@ -67,9 +98,9 @@ public class OrderRepository : IOrderRepository
         var objHeader = await _db.OrderHeaders.FirstOrDefaultAsync(o => o.Id == id);
         if (objHeader is not null)
         {
-            /* If the header exists, retrieve all order details */
+            /* If the header exists, retrieve all order details based on its Id, delete order 
+               header and order details, and save changes to db */
             IEnumerable<OrderDetail> objDetail = _db.OrderDetails.Where(u => u.OrderHeaderId == id);
-            
             _db.OrderDetails.RemoveRange(objDetail);
             _db.OrderHeaders.Remove(objHeader);
             return await _db.SaveChangesAsync();        
@@ -77,19 +108,47 @@ public class OrderRepository : IOrderRepository
         return 0;
     }
 
-    //public async Task<OrderHeaderDTO> UpdateHeader(OrderHeaderDTO objDTO)
-    //{
 
-    //}
+    public async Task<OrderHeaderDTO> UpdateHeader(OrderHeaderDTO objDTO)
+    {
+        if (objDTO is not null)
+        {
+            var orderHeader = _mapper.Map<OrderHeaderDTO, OrderHeader>(objDTO);
+            _db.OrderHeaders.Update(orderHeader);
+            await _db.SaveChangesAsync();
+            return _mapper.Map<OrderHeader, OrderHeaderDTO>(orderHeader);
+        }
+        return new OrderHeaderDTO();
+    }
 
-    //public async Task<OrderHeaderDTO> MarkPaymentSuccessful(int id)
-    //{
 
-    //}
+    public async Task<OrderHeaderDTO> MarkPaymentSuccessful(int id)
+    {
+        var data = await _db.OrderHeaders.FindAsync(id);
+        //if (data is null) return new OrderHeaderDTO();
+        if (data is not null && data.Status == StaticDetails.STATUS_PENDING)
+        {
+            data.Status = StaticDetails.STATUS_CONFIRMED;
+            await _db.SaveChangesAsync();
+            return _mapper.Map<OrderHeader, OrderHeaderDTO>(data);
+        }
 
-    //public async Task<bool> UpdateOrderStatus(int orderId, string status)
-    //{
+        return new OrderHeaderDTO();
+    }
 
-    //}
+
+    public async Task<bool> UpdateOrderStatus(int orderId, string status)
+    {
+        var data = await _db.OrderHeaders.FindAsync(orderId);
+        if (data is not null)
+        {
+            data.Status = status;
+            if (status == StaticDetails.STATUS_SHIPPED) data.ShippingDate = DateTime.Now;
+            await _db.SaveChangesAsync();
+            return true;
+        }
+
+        return false;
+    }
 
 }

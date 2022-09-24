@@ -1,7 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using BlazorEcomm_COMMON;
-using static BlazorEcomm_COMMON.Enums;
-using static BlazorEcomm_COMMON.States;
 
 namespace BlazorEcomm_DATA;
 
@@ -14,63 +11,52 @@ public class OrderHeader
     // #TODO: Add navigation property
     public string UserId { get; set; } = string.Empty;
 
-
-    [Required, Display(Name="Order Total")]
+    [Required]
     public double OrderTotal { get; set; }
 
-
-    [Required, Display(Name="Order Date")]
+    [Required]
     public DateTime OrderDate { get; set; }
 
-
-    [Required, Display(Name="Shipping Date")]
+    [Required]
     public DateTime ShippingDate { get; set; }
 
-
-    public OrderStatus Status { get; set; }
-
+    [Required]
+    public string Status { get; set; } = string.Empty;
 
     public string? SessionId { get; set; }
-
 
     public string? PaymentIntentId { get; set; }
 
     
     // User Details
 
-    [Required, Display(Name="Name")]
-    public string Name { get; set; } = string.Empty;
+    [Required]
+    public string FirstName { get; set; } = string.Empty;
 
+    [Required]
+    public string LastName { get; set; } = string.Empty;
 
-    [Required, Display(Name="Phone Number")]
+    [Required]
     public string PhoneNumber { get; set; } = string.Empty;
 
-
-    [Required, Display(Name="Address - line 1")]
+    [Required]
     public string Address_1 { get; set; } = string.Empty;
 
-
-    [Display(Name="Address - line 2")]
     public string? Address_2 { get; set; } = string.Empty;
 
-
-    [Required, Display(Name="City")]
+    [Required]
     public string City { get; set; } = string.Empty;
 
+    [Required]
+    public string State { get; set; } = string.Empty;
 
-    [Required, Display(Name = "State")]
-    public State State { get; set; } = new(string.Empty, string.Empty);
-
-
-    [Required, Display(Name="Country")]
+    [Required]
     public string Country { get; set; } = string.Empty;
 
-
-    [Required, Display(Name="Postal Code")]
+    [Required]
     public string PostalCode { get; set; } = string.Empty;
 
-
-    [Required, Display(Name="Email")]
+    [Required]
     public string Email { get; set; } = string.Empty;
 
 

@@ -5,10 +5,11 @@ namespace BlazorEcomm_MODELS;
 
 public class ProductDTO
 {
-    public ProductDTO()
-    {
-        Category = null!;
-    }
+    // #NOTE: REMOVED PRIVATE CONSTRUCTOR
+    //public ProductDTO()
+    //{
+    //    Category = null!;
+    //}
 
     public int Id { get; set; }
 
@@ -49,7 +50,8 @@ public class ProductDTO
 
     [Range(1, int.MaxValue, ErrorMessage = "Please select a category.")]
     public int CategoryId { get; set; }
-    public Category Category { get; set; }
+    // #NOTE: Init new Category instead of doing it in constructor
+    public Category Category { get; set; } = new Category();
 
 
     // ProductPrices navigation property

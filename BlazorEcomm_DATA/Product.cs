@@ -5,10 +5,11 @@ namespace BlazorEcomm_DATA;
 
 public class Product
 {
-    private Product()
-    {
-        Category = null!;
-    }
+    // #NOTE: REMOVED PRIVATE CONSTRUCTOR
+    //private Product()
+    //{
+    //    Category = null!;
+    //}
 
     public int Id { get; set; }
 
@@ -49,8 +50,9 @@ public class Product
 
     public int CategoryId { get; set; }
 
+    // #NOTE: Init new Category instead of doing it in constructor
     [ForeignKey("CategoryId")]
-    public Category Category { get; set; }
+    public Category Category { get; set; } = new Category();
 
     public ICollection<ProductPrice> ProductPrices { get; set; } = new List<ProductPrice>();
 }

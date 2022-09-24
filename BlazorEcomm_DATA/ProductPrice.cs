@@ -4,14 +4,16 @@ namespace BlazorEcomm_DATA;
 
 public class ProductPrice
 {
-    private ProductPrice()
-    {
-        Product = null!;
-    }
+    //private ProductPrice()
+    //{
+    //    Product = null!;
+    //}
 
     public int Id { get; set; }
     public double Price { get; set; }
-    public string? Size { get; set; }
+
+    // #NOTE: Removed nullable type
+    public string Size { get; set; } = String.Empty;
 
     // Laptop options
     public string? ScreenSize { get; set; }
@@ -28,7 +30,8 @@ public class ProductPrice
     // Foreign key to product table
     public int ProductId { get; set; }
 
+    // #NOTE: Init new Product instead of doing it in constructor
     [ForeignKey("ProductId")]
-    public Product Product { get; set; }
+    public Product Product { get; set; } = new Product();
 
 }

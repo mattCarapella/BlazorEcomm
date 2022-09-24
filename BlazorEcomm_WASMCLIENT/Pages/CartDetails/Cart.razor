@@ -112,9 +112,9 @@ else
 }
 
 @code {
-    public bool IsProcessing { get; set; } = false;
     private List<ShoppingCart> ShoppingCart = new List<ShoppingCart>();
     private IEnumerable<ProductDTO> Products { get; set; } = new List<ProductDTO>();
+    public bool IsProcessing { get; set; } = false;
     private double OrderTotal { get; set; } = 0.0;
 
     protected override async Task OnInitializedAsync()

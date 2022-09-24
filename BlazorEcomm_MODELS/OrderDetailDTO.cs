@@ -13,7 +13,7 @@ public class OrderDetailDTO
 
 
     [Required]
-    int ProductId { get; set; }
+    public int ProductId { get; set; }
 
 
     public ProductDTO? Product { get; set; }

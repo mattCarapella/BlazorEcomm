@@ -15,7 +15,9 @@ public class ProductPriceDTO
     [Required,
      Range(0.01, int.MaxValue, ErrorMessage = "Price must be greater than $0.01")]
     public double Price { get; set; }
-    public string? Size { get; set; }
+
+    // #NOTE: Removed nullable type
+    public string Size { get; set; } = String.Empty;    
 
     // Laptop options
     public string? ScreenSize { get; set; }

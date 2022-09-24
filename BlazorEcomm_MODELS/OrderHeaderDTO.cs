@@ -1,6 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using BlazorEcomm_COMMON;
-using static BlazorEcomm_COMMON.Enums;
 
 namespace BlazorEcomm_MODELS;
 
@@ -24,7 +22,8 @@ public class OrderHeaderDTO
     public DateTime ShippingDate { get; set; }
 
 
-    public OrderStatus Status { get; set; }
+    [Required, Display(Name = "Order Status")]
+    public string Status { get; set; } = string.Empty;
 
 
     public string? SessionId { get; set; }
@@ -35,19 +34,23 @@ public class OrderHeaderDTO
 
     // User Details
 
-    [Required, Display(Name = "Name")]
-    public string Name { get; set; } = string.Empty;
+    [Required, Display(Name = "First Name")]
+    public string FirstName { get; set; } = string.Empty;
+
+
+    [Required, Display(Name = "Last Name")]
+    public string LastName { get; set; } = string.Empty;
 
 
     [Required, Display(Name = "Phone Number")]
     public string PhoneNumber { get; set; } = string.Empty;
 
 
-    [Required, Display(Name = "Address - line 1")]
+    [Required, Display(Name = "Address 1")]
     public string Address_1 { get; set; } = string.Empty;
 
 
-    [Display(Name = "Address - line 2")]
+    [Display(Name = "Address 2")]
     public string? Address_2 { get; set; } = string.Empty;
 
 
@@ -56,7 +59,7 @@ public class OrderHeaderDTO
 
 
     [Required, Display(Name = "State")]
-    public State State { get; set; } = new(string.Empty, string.Empty);
+    public string State { get; set; } = string.Empty;
 
 
     [Required, Display(Name = "Country")]

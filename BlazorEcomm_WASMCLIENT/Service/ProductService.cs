@@ -22,6 +22,8 @@ public class ProductService : IProductService
         // Send API request to controller which then uses repository to get product data
         // _httpClient.GetAsync(...) is getting API route url that is stored in appsettings.json
         var response = await _httpClient.GetAsync($"/api/products/{productId}");
+
+        // ReadAsString serializes the http response
         var content = await response.Content.ReadAsStringAsync();
 
         if (response.IsSuccessStatusCode)
