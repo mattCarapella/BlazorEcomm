@@ -34,7 +34,7 @@ else
                                 {
                                     @if (productPrice.Id == DetailsVM.SelectedProductPriceId)
                                     {
-                                        // This product is currently selected by the user so change the button color
+                                        // Selecting a product size puts a border around the selected item
                                         <div class="col-2 bg-light text-center pt-2 m-2" 
                                              style="border:3px solid #28A745; border-radius:10px;box-shadow:5px">
                                             <p>@productPrice.Size</p>
@@ -81,7 +81,7 @@ else
                         <div class="col-12 col-md-6 pb-1">
                             @if (DetailsVM.SelectedProductPriceId > 0)
                             {
-                                // Item has been selected
+                                // Button is only enabled if a product has been selected
                                 <button type="submit" value="Add to Cart" class="btn btn-primary form-control">
                                     Add to Cart
                                 </button>

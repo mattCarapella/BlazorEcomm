@@ -8,6 +8,12 @@ namespace BlazorEcomm_WASMCLIENT.Service;
 public class CartService : ICartService
 {
     private readonly ILocalStorageService _localStorage;
+
+    /* We can bind an event to OnChange so that when its called the state will be updated, causing 
+       the UI to be re-rendered. Whenever the cart is incremented or decremented, the NavMenu will 
+       be informed of the change so it can re-render the UI */
+    public event Action? OnChange;
+
     public CartService(ILocalStorageService localStorage)
     {
         _localStorage = localStorage;
@@ -42,6 +48,9 @@ public class CartService : ICartService
 
         // Set LocalStorage with new cart
         await _localStorage.SetItemAsync(StaticDetails.ShoppingCart, cart);
+
+        // Update state and re-render UI
+        OnChange!.Invoke();
     }
 
 
@@ -55,7 +64,7 @@ public class CartService : ICartService
             {
                 /* We have found the object that needs to be decremented or removed. If count is 0 or 1, we should
                    remove the item. Otherwise decrement by amount set in cartToDecrement */
-                if (cart[i].Count == 1 || cart[i].Count == 0)
+                if (cart[i].Count == 1 || cartToDecrement.Count == 0)
                 {
                     cart.Remove(cart[i]);
                 }
@@ -68,6 +77,9 @@ public class CartService : ICartService
 
         // Set LocalStorage with new cart
         await _localStorage.SetItemAsync(StaticDetails.ShoppingCart, cart);
+        
+        // Update state and re-render UI
+        OnChange!.Invoke();
     }
 
 }

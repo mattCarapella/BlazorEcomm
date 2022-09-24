@@ -1,7 +1,12 @@
-﻿<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+﻿@using BlazorEcomm_COMMON
+@inject ISyncLocalStorageService _localStorage
+@inject ICartService _cartService
+@implements IDisposable
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="min-height: 70px;">
     <div class="container-fluid">
         <a class="navbar-brand px-4" href="#">BlazorStore</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" 
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -10,28 +15,39 @@
             </ul>
             <form class="d-flex">
                 <ul class="navbar-nav">
-                    <li class="nav-item p-0 px-3">
-                        <NavLink class="nav-link" href="/cart">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
-  <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-</svg>
-                        </NavLink>
-                    </li>
                     <li class="nav-item p-0">
                         <NavLink class="nav-link" href="signup">
-                            <span class="p-2">Sign Up</span>    
+                            <span class="p-2" id="nav-item-text" >Sign Up</span>
                         </NavLink>
                     </li>
                     <li class="nav-item p-0">
                         <NavLink class="nav-link" href="signin">
-                            <span class="p-2">Sign In</span>    
+                            <span class="p-2" id="nav-item-text">Sign In</span>
                         </NavLink>
                     </li>
+                    <li class="nav-item p-0 px-3" id="navbar-cart-count">
+                        <NavLink class="nav-link" href="/cart">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                                <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                            </svg>
+                            @if (GetCartCount() > 0)
+                            {
+                                <div class="" id="icon-text-overlay">
+                                    <div class="" id="icon-text-circle" >
+                                        @GetCartCount().ToString()
+                                    </div>
+                                </div>
+                            }
+                        </NavLink>
+                    </li>
+
                 </ul>
             </form>
         </div>
     </div>
 </nav>
+
+
 
 @code {
     private bool collapseNavMenu = true;
@@ -41,87 +57,25 @@
     {
         collapseNavMenu = !collapseNavMenu;
     }
+
+    protected override void OnInitialized()
+    {
+        /* Used to nofity when state changes in order to update the UI and increment or
+           decrement the cart count */
+        _cartService.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        /* Remove registration for StateHasChanged when Event is disposed. Uses IDisposable */
+        _cartService.OnChange -= StateHasChanged;
+    }
+
+    private int GetCartCount()
+    {
+        var cart = _localStorage.GetItem<List<ShoppingCart>>(StaticDetails.ShoppingCart);
+        return cart == null ? 0 : cart.Count;
+    }
+
 }
 
-
-
-
-
-
-
-
-
-@code{
-//    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-//    <div class="container-fluid">
-//        <a class="navbar-brand" href="#">BlazorStore</a>
-//        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-//            <span class="navbar-toggler-icon"></span>
-//        </button>
-//        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-//            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-//                <li class="nav-item">
-//                    <NavLink class="nav-link" href="/"><span class="p-2">Home</span></NavLink>
-//                </li>
-//                <li class="nav-item">
-//                    <a class="nav-link" href="#">Link</a>
-//                </li>
-//                <li class="nav-item dropdown">
-//                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-//                        Dropdown
-//                    </a>
-//                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-//                        <li><a class="dropdown-item" href="#">Action</a></li>
-//                        <li><a class="dropdown-item" href="#">Another action</a></li>
-//                        <li><hr class="dropdown-divider"></li>
-//                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-//                    </ul>
-//                </li>
-//                <li class="nav-item">
-//                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-//                </li>
-//            </ul>
-//            <form class="d-flex">
-//                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-//                <button class="btn btn-outline-success" type="submit">Search</button>
-//            </form>
-//        </div>
-//    </div>
-//</nav>
-}
-
-
-
-
-
-
-
-
-@*<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-    <a class="navbar-brand" href="">BlazorEcomm_WASMCLIENT</a>
-    <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-    <span class="navbar-toggler-icon"></span>
-    </button>
-    </div>
-    </div>
-
-    <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-    <div class="nav-item px-3">
-    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-    <span class="oi oi-home" aria-hidden="true"></span> Home
-    </NavLink>
-    </div>
-    <div class="nav-item px-3">
-    <NavLink class="nav-link" href="counter">
-    <span class="oi oi-plus" aria-hidden="true"></span> Counter
-    </NavLink>
-    </div>
-    <div class="nav-item px-3">
-    <NavLink class="nav-link" href="fetchdata">
-    <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-    </NavLink>
-    </div>
-    </nav>
-    </div>*@
