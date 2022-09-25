@@ -1,5 +1,4 @@
-﻿
-namespace BlazorEcomm_DATA.ViewModel;
+﻿namespace BlazorEcomm_DATA.ViewModel;
 
 public class Order
 {

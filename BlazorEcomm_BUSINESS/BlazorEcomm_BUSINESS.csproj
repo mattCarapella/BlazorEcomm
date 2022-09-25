@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BlazorEcomm_COMMON\BlazorEcomm_COMMON.csproj" />
     <ProjectReference Include="..\BlazorEcomm_DATA\BlazorEcomm_DATA.csproj" />
     <ProjectReference Include="..\BlazorEcomm_MODELS\BlazorEcomm_MODELS.csproj" />
   </ItemGroup>
