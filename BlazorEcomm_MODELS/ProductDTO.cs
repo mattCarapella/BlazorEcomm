@@ -5,12 +5,6 @@ namespace BlazorEcomm_MODELS;
 
 public class ProductDTO
 {
-    // #NOTE: REMOVED PRIVATE CONSTRUCTOR
-    //public ProductDTO()
-    //{
-    //    Category = null!;
-    //}
-
     public int Id { get; set; }
 
     [Required,
@@ -34,9 +28,9 @@ public class ProductDTO
 
     [MinLength(2, ErrorMessage = "Product color must be at least 3 characters."),
      MaxLength(50, ErrorMessage = "Product color must be less than 30 characters.")]
-    public string? Color { get; set; }
+    public string? Color { get; set; } = String.Empty;
 
-    public string? ImageUrl { get; set; }
+    public string? ImageUrl { get; set; } = String.Empty;
 
 
     [Display(Name = "Date Added"),
@@ -48,9 +42,9 @@ public class ProductDTO
     public DateTime? DateUpdated { get; set; }
 
 
+    // Category
     [Range(1, int.MaxValue, ErrorMessage = "Please select a category.")]
     public int CategoryId { get; set; }
-    // #NOTE: Init new Category instead of doing it in constructor
     public Category Category { get; set; } = new Category();
 
 

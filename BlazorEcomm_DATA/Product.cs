@@ -5,12 +5,6 @@ namespace BlazorEcomm_DATA;
 
 public class Product
 {
-    // #NOTE: REMOVED PRIVATE CONSTRUCTOR
-    //private Product()
-    //{
-    //    Category = null!;
-    //}
-
     public int Id { get; set; }
 
     [Required,
@@ -34,9 +28,9 @@ public class Product
 
     [MinLength(2, ErrorMessage = "Product color must be at least 3 characters."),
      MaxLength(50, ErrorMessage = "Product color must be less than 30 characters.")]
-    public string? Color { get; set; }
+    public string? Color { get; set; } = String.Empty;
 
-    public string? ImageUrl { get; set; }
+    public string? ImageUrl { get; set; } = String.Empty;
 
 
     [Display(Name = "Date Added"), 
@@ -48,11 +42,12 @@ public class Product
     public DateTime? DateUpdated { get; set; }
 
 
+    // Category
     public int CategoryId { get; set; }
 
-    // #NOTE: Init new Category instead of doing it in constructor
     [ForeignKey("CategoryId")]
     public Category Category { get; set; } = new Category();
 
+    // Product Prices
     public ICollection<ProductPrice> ProductPrices { get; set; } = new List<ProductPrice>();
 }

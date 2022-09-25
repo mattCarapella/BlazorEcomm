@@ -15,7 +15,7 @@ public class OrderDetail
     public int ProductId { get; set; }
     
     [ForeignKey("ProductId"), NotMapped] 
-    public virtual Product? Product { get; set; }
+    public virtual Product Product { get; set; } = new Product();
     
     [Required] 
     public int Count { get; set; }
