@@ -6,7 +6,6 @@
         </button>
     </div>
 </div>
-
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <nav class="flex-column">
         <div class="nav-item px-3">
@@ -15,22 +14,29 @@
             </NavLink>
         </div>
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/categories">
-                <span class="oi oi-plus" aria-hidden="true"></span> Categories
+            <NavLink class="nav-link" href="/js" Match="NavLinkMatch.All">
+                <span class="oi oi-home" aria-hidden="true"></span> JSRuntime Test
             </NavLink>
         </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/products">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Products
-            </NavLink>
-        </div>
+        <AuthorizeView Roles="@RoleAdmin">
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/categories">
+                    <span class="oi oi-plus" aria-hidden="true"></span> Categories
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/products">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Products
+                </NavLink>
+            </div>
+        </AuthorizeView>
     </nav>
 </div>
 
 @code {
     private bool collapseNavMenu = true;
-
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    private string RoleAdmin { get; set; } = StaticDetails.ROLE_ADMIN;
 
     private void ToggleNavMenu()
     {

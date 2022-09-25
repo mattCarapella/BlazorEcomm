@@ -1,7 +1,8 @@
 ﻿@page "/categories"
+@using BlazorEcomm_COMMON
 @inject ICategoryRepository _categoryRepository
 @inject IJSRuntime _jsRuntime
-@attribute [Authorize]
+@attribute [Authorize(Roles = StaticDetails.ROLE_ADMIN)]
 
 <_DeleteConfirmation ConfirmationChanged="ConfirmDelete" IsParentComponentProcessing="IsLoading"></_DeleteConfirmation>
 

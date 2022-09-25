@@ -124,8 +124,8 @@ namespace BlazorEcomm_SERVER.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-                    /* New users will be created with the role of Admin. */
-                    await _userManager.AddToRoleAsync(user, StaticDetails.ROLE_ADMIN);
+                    /* New users will be created with the role of CUSTOMER. */
+                    await _userManager.AddToRoleAsync(user, StaticDetails.ROLE_CUSTOMER);
 
                     _logger.LogInformation("User created a new account with password.");
 
